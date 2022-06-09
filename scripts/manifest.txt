@@ -1,0 +1,10 @@
+[ 
+    {
+        "prefix": "s3://sagemaker-crossaccnt-train/data/finance/distrib-multi/shard/"
+    },
+    "sh0/test_0.csv",
+    "sh0/text_file_0.txt",
+    "sh1/test_1.csv",
+    "sh2/test_2.csv",
+    "sh3/test_3.csv"
+]
