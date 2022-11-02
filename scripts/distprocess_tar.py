@@ -125,7 +125,26 @@ if __name__ == "__main__":
 
         # -- extract the TAR to the ./filesProc/data which is the temp location.
         with tarfile.open(fn, 'r:*') as s3_tar:
-            s3_tar.extractall(proc_dir)
+            def is_within_directory(directory, target):
+                
+                abs_directory = os.path.abspath(directory)
+                abs_target = os.path.abspath(target)
+            
+                prefix = os.path.commonprefix([abs_directory, abs_target])
+                
+                return prefix == abs_directory
+            
+            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+            
+                for member in tar.getmembers():
+                    member_path = os.path.join(path, member.name)
+                    if not is_within_directory(path, member_path):
+                        raise Exception("Attempted Path Traversal in Tar File")
+            
+                tar.extractall(path, members, numeric_owner=numeric_owner) 
+                
+            
+            safe_extract(s3_tar, proc_dir)
 
         _logger.info(f"TAR FILE Extracted successfully to dir={proc_dir}")  
         allFiles = [f for f in os.listdir(proc_dir) ]
